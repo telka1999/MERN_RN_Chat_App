@@ -1,35 +1,15 @@
-import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { Login } from "./screens/Login";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 export default function App() {
-  const [data, setData] = useState(null);
-  const fetchData = async () => {
-    try {
-      const res = await fetch("http://10.0.2.2:5000/api/users/register", {
-        method: "POST",
-        redirect: "follow",
-      });
-      const data = await res.json();
-      setData(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const Stack = createNativeStackNavigator();
+
   return (
-    <View style={styles.container}>
-      <Text>MERN RN Firebase Chat App data: {data?.message}</Text>
-      <StatusBar style="auto" />
-      <Button onPress={fetchData} title="Click" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Login" component={Login} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
