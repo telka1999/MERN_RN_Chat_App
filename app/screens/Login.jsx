@@ -2,6 +2,7 @@ import {
   View,
   StyleSheet,
   TextInput,
+  Text,
   ActivityIndicator,
   Button,
 } from "react-native";
@@ -26,6 +27,7 @@ export const Login = () => {
       });
       const data = await res.json();
       setData(data);
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -34,7 +36,7 @@ export const Login = () => {
     setLoading(true);
     try {
       const res = await signInWithEmailAndPassword(auth, email, password);
-      console.log(res);
+      console.log(res.user);
     } catch (error) {
       console.log(error);
     } finally {
@@ -66,7 +68,7 @@ export const Login = () => {
         value={password}
         onChangeText={(text) => setPassword(text)}
         style={style.input}
-        placeholder="Email"
+        placeholder="Password"
         autoCapitalize="none"
       ></TextInput>
       {loading ? (
@@ -75,8 +77,10 @@ export const Login = () => {
         <>
           <Button title="Login" onPress={login} />
           <Button title="Register" onPress={register} />
+          <Button title="Protected Data" onPress={fetchData} />
         </>
       )}
+      <Text>{data ? data.message : ""}</Text>
     </View>
   );
 };
