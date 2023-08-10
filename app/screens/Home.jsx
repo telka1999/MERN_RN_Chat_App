@@ -1,5 +1,6 @@
 import { View, Text, Button } from "react-native";
 import { useState } from "react";
+import { firebaseAuth } from "../config/firebase";
 export const Home = () => {
   const [data, setData] = useState(null);
   const fetchData = async () => {
@@ -18,8 +19,9 @@ export const Home = () => {
   return (
     <View>
       <Text>Home</Text>
-      <Button onPress={fetchData} title="Protected DataI" />
+      <Button onPress={fetchData} title="Protected Data" />
       <Text>{data ? data.message : ""}</Text>
+      <Button onPress={() => firebaseAuth.signOut()} title="Log out" />
     </View>
   );
 };
