@@ -7,6 +7,7 @@ const authUser = async (req, res) => {
 // Register user | POST | Public
 
 const registerUser = async (req, res) => {
+  console.log(req.user);
   res.status(200).json({ message: "Register User" });
 };
 

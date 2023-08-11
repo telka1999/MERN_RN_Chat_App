@@ -12,17 +12,21 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { useAuth } from "../utils/hooks/useAuth";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const auth = firebaseAuth;
   const [data, setData] = useState(null);
+  const { user } = useAuth();
   const fetchData = async () => {
     try {
       const res = await fetch("http://10.0.2.2:5000/api/users/register", {
         method: "POST",
+        headers: {
+          "Authorization": "Bearer " + user.accessToken,
+        },
         redirect: "follow",
       });
       const data = await res.json();
@@ -35,7 +39,11 @@ export const Login = () => {
   const login = async () => {
     setLoading(true);
     try {
-      const res = await signInWithEmailAndPassword(auth, email, password);
+      const res = await signInWithEmailAndPassword(
+        firebaseAuth,
+        email,
+        password
+      );
       console.log(res.user);
     } catch (error) {
       console.log(error);
@@ -46,7 +54,11 @@ export const Login = () => {
   const register = async () => {
     setLoading(true);
     try {
-      const res = await createUserWithEmailAndPassword(auth, email, password);
+      const res = await createUserWithEmailAndPassword(
+        firebaseAuth,
+        email,
+        password
+      );
       console.log(res);
     } catch (error) {
       console.log(error);
