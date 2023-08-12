@@ -1,7 +1,26 @@
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, StyleSheet } from "react-native";
 import { useState } from "react";
 import { firebaseAuth } from "../config/firebase";
 import { useAuth } from "../utils/hooks/useAuth";
+import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { useLayoutEffect } from "react";
+import { User } from "../components/User";
+const items = [
+  {
+    name: "Friend One",
+    email: "friendone@gmail.com",
+  },
+  {
+    name: "Friend Two",
+    email: "friendtwo@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+];
 export const Home = () => {
   const { user } = useAuth();
   const [data, setData] = useState(null);
@@ -21,12 +40,29 @@ export const Home = () => {
       console.log(error);
     }
   };
+  const navigation = useNavigation();
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: "",
+      headerLeft: () => (
+        <Text style={{ fontSize: 18, fontWeight: "bold" }}>Swift Chat</Text>
+      ),
+      headerRight: () => (
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+          <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
+          <MaterialIcons name="people-outline" size={24} color="black" />
+        </View>
+      ),
+    });
+  }, []);
   return (
     <View>
-      <Text>Home</Text>
-      <Button onPress={fetchData} title="Protected Data" />
-      <Text>{data ? data.message : ""}</Text>
-      <Button onPress={() => firebaseAuth.signOut()} title="Log out" />
+      <View style={{ padding: 10 }}>
+        {items.map((item, i) => {
+          return <User key={i} item={item} />;
+        })}
+      </View>
     </View>
   );
 };
+const styles = StyleSheet.create({});

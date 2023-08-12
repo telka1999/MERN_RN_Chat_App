@@ -106,6 +106,7 @@ export const Register = () => {
             />
           </View>
           <Pressable
+            onPress={register}
             style={{
               width: 200,
               backgroundColor: "#4A55A2",
@@ -128,11 +129,11 @@ export const Register = () => {
             </Text>
           </Pressable>
           <Pressable
-          onPress={()=>navigation.navigate("Login")}
+            onPress={() => navigation.navigate("Login")}
             style={{ marginTop: 15 }}
           >
             <Text style={{ textAlign: "center", color: "gray", fontSize: 16 }}>
-            Already Have an account? Sign in
+              Already Have an account? Sign in
             </Text>
           </Pressable>
         </View>
