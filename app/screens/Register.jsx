@@ -1,32 +1,31 @@
 import {
   View,
-  TextInput,
   Text,
+  StyleSheet,
+  TextInput,
   KeyboardAvoidingView,
   Pressable,
-  StyleSheet,
+  Alert,
 } from "react-native";
 import { useState } from "react";
 import { firebaseAuth } from "../config/firebase";
-import {
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 
-export const Login = () => {
+export const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
-  const login = async () => {
+  const register = async () => {
     setLoading(true);
     try {
-      const res = await signInWithEmailAndPassword(
+      const res = await createUserWithEmailAndPassword(
         firebaseAuth,
         email,
         password
       );
-      console.log(res.user);
+      console.log(res);
     } catch (error) {
       console.log(error);
     } finally {
@@ -51,20 +50,33 @@ export const Login = () => {
           }}
         >
           <Text style={{ color: "#4A55A2", fontSize: 17, fontWeight: "500" }}>
-            Sign In
+            Register
           </Text>
           <Text style={{ fontSize: 17, fontWeight: "600", marginTop: 15 }}>
-            Sign In to Your Account
+            Register to Your Account
           </Text>
         </View>
         <View style={{ marginTop: 50 }}>
           <View>
             <Text style={{ fontSize: 14, fontWeight: "500", color: "gray" }}>
+              Name
+            </Text>
+            <TextInput
+              autoCapitalize="none"
+              style={{
+                fontSize: 18,
+                borderBottomColor: "gray",
+                borderBottomWidth: 1,
+                marginVertical: 10,
+                width: 300,
+              }}
+            />
+          </View>
+          <View style={{ marginTop: 10 }}>
+            <Text style={{ fontSize: 14, fontWeight: "500", color: "gray" }}>
               Email
             </Text>
             <TextInput
-              value={email}
-              onChangeText={(text) => setEmail(text)}
               autoCapitalize="none"
               style={{
                 fontSize: 18,
@@ -94,7 +106,6 @@ export const Login = () => {
             />
           </View>
           <Pressable
-            onPress={login}
             style={{
               width: 200,
               backgroundColor: "#4A55A2",
@@ -113,15 +124,15 @@ export const Login = () => {
                 textAlign: "center",
               }}
             >
-              Login
+              Register
             </Text>
           </Pressable>
           <Pressable
-            onPress={() => navigation.navigate("Register")}
+          onPress={()=>navigation.navigate("Login")}
             style={{ marginTop: 15 }}
           >
             <Text style={{ textAlign: "center", color: "gray", fontSize: 16 }}>
-              Don't have an account? Sign Up
+            Already Have an account? Sign in
             </Text>
           </Pressable>
         </View>
