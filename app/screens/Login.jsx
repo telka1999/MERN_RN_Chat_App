@@ -1,10 +1,9 @@
 import {
   View,
-  StyleSheet,
   TextInput,
   Text,
-  ActivityIndicator,
-  Button,
+  KeyboardAvoidingView,
+  Pressable,
 } from "react-native";
 import { useState } from "react";
 import { firebaseAuth } from "../config/firebase";
@@ -12,30 +11,11 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { useAuth } from "../utils/hooks/useAuth";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState(null);
-  const { user } = useAuth();
-  const fetchData = async () => {
-    try {
-      const res = await fetch("http://10.0.2.2:5000/api/users/register", {
-        method: "POST",
-        headers: {
-          "Authorization": "Bearer " + user.accessToken,
-        },
-        redirect: "follow",
-      });
-      const data = await res.json();
-      setData(data);
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const login = async () => {
     setLoading(true);
     try {
@@ -67,48 +47,95 @@ export const Login = () => {
     }
   };
   return (
-    <View style={style.conteiner}>
-      <TextInput
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-        style={style.input}
-        placeholder="Email"
-        autoCapitalize="none"
-      ></TextInput>
-      <TextInput
-        secureTextEntry={true}
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-        style={style.input}
-        placeholder="Password"
-        autoCapitalize="none"
-      ></TextInput>
-      {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <>
-          <Button title="Login" onPress={login} />
-          <Button title="Register" onPress={register} />
-          <Button title="Protected Data" onPress={fetchData} />
-        </>
-      )}
-      <Text>{data ? data.message : ""}</Text>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+        padding: 10,
+        alignItems: "center",
+      }}
+    >
+      <KeyboardAvoidingView>
+        <View
+          style={{
+            marginTop: 100,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ color: "#4A55A2", fontSize: 17, fontWeight: "500" }}>
+            Sign In
+          </Text>
+          <Text style={{ fontSize: 17, fontWeight: "600", marginTop: 15 }}>
+            Sign In to Your Account
+          </Text>
+        </View>
+        <View style={{ marginTop: 50 }}>
+          <View>
+            <Text style={{ fontSize: 14, fontWeight: "500", color: "gray" }}>
+              Email
+            </Text>
+            <TextInput
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+              autoCapitalize="none"
+              style={{
+                fontSize: 18,
+                borderBottomColor: "gray",
+                borderBottomWidth: 1,
+                marginVertical: 10,
+                width: 300,
+              }}
+            />
+          </View>
+          <View style={{ marginTop: 10 }}>
+            <Text style={{ fontSize: 14, fontWeight: "500", color: "gray" }}>
+              Password
+            </Text>
+            <TextInput
+              secureTextEntry={true}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              autoCapitalize="none"
+              style={{
+                fontSize: 18,
+                borderBottomColor: "gray",
+                borderBottomWidth: 1,
+                marginVertical: 10,
+                width: 300,
+              }}
+            />
+          </View>
+          <Pressable
+            onPress={login}
+            style={{
+              width: 200,
+              backgroundColor: "#4A55A2",
+              padding: 15,
+              marginTop: 50,
+              marginRight: "auto",
+              marginLeft: "auto",
+              borderRadius: 6,
+            }}
+          >
+            <Text
+              style={{
+                color: "white",
+                fontSize: 16,
+                fontWeight: "600",
+                textAlign: "center",
+              }}
+            >
+              Login
+            </Text>
+          </Pressable>
+          <Pressable style={{ marginTop: 15 }}>
+            <Text style={{ textAlign: "center", color: "gray", fontSize: 16 }}>
+              Don't have an account? Sign Up
+            </Text>
+          </Pressable>
+        </View>
+      </KeyboardAvoidingView>
     </View>
   );
 };
-
-const style = StyleSheet.create({
-  conteiner: {
-    marginHorizontal: 20,
-    flex: 1,
-    justifyContent: "center",
-  },
-  input: {
-    marginVertical: 4,
-    height: 50,
-    borderWidth: 1,
-    borderRadius: 4,
-    padding: 10,
-    backgroundColor: "#fff",
-  },
-});
