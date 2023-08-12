@@ -49,7 +49,12 @@ export const Home = () => {
       ),
       headerRight: () => (
         <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
-          <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
+          <Ionicons
+            onPress={() => navigation.navigate("Chats")}
+            name="chatbox-ellipses-outline"
+            size={24}
+            color="black"
+          />
           <MaterialIcons
             onPress={() => navigation.navigate("Friends")}
             name="people-outline"
