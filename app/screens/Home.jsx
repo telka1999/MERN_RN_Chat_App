@@ -1,4 +1,4 @@
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { useState } from "react";
 import { firebaseAuth } from "../config/firebase";
 import { useAuth } from "../utils/hooks/useAuth";
@@ -50,7 +50,12 @@ export const Home = () => {
       headerRight: () => (
         <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
           <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
-          <MaterialIcons name="people-outline" size={24} color="black" />
+          <MaterialIcons
+            onPress={() => navigation.navigate("Friends")}
+            name="people-outline"
+            size={24}
+            color="black"
+          />
         </View>
       ),
     });
