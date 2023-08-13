@@ -1,8 +1,11 @@
 import { Pressable, Image, View, Text, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 export const UserChat = ({ item }) => {
+  const navigation = useNavigation();
   return (
     <Pressable
+      onPress={() => navigation.navigate("Messages")}
       style={{
         flexDirection: "row",
         alignItems: "center",
