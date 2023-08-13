@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Pressable, Image } from "react-native";
-export const User = ({ item }) => {
+export const User = ({ item, btnName }) => {
   return (
     <Pressable
       style={{ flexDirection: "row", alignItems: "center", marginVertical: 10 }}
@@ -27,7 +27,7 @@ export const User = ({ item }) => {
           borderRadius: 6,
         }}
       >
-        <Text style={{ textAlign: "center", color: "white" }}>Friends</Text>
+        <Text style={{ textAlign: "center", color: "white" }}>{btnName}</Text>
       </Pressable>
     </Pressable>
   );

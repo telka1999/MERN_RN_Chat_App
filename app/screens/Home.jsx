@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, ScrollView, Text, StyleSheet } from "react-native";
 import { useState } from "react";
 import { firebaseAuth } from "../config/firebase";
 import { useAuth } from "../utils/hooks/useAuth";
 import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useLayoutEffect } from "react";
@@ -15,6 +16,86 @@ const items = [
   {
     name: "Friend Two",
     email: "friendtwo@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
+  },
+  {
+    name: "Friend Three",
+    email: "friendthree@gmail.com",
   },
   {
     name: "Friend Three",
@@ -61,18 +142,24 @@ export const Home = () => {
             size={24}
             color="black"
           />
+          <Ionicons
+            onPress={() => navigation.navigate("Search")}
+            name="search-outline"
+            size={24}
+            color="black"
+          />
         </View>
       ),
     });
   }, []);
   return (
-    <View>
+    <ScrollView>
       <View style={{ padding: 10 }}>
         {items.map((item, i) => {
-          return <User key={i} item={item} />;
+          return <User key={i} item={item} btnName="Friend" />;
         })}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({});
