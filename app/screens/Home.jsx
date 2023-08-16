@@ -1,9 +1,7 @@
 import { View, ScrollView, Text, StyleSheet } from "react-native";
 import { useState } from "react";
-import { firebaseAuth } from "../config/firebase";
 import { useAuth } from "../utils/hooks/useAuth";
 import { Ionicons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useLayoutEffect } from "react";
@@ -129,7 +127,7 @@ export const Home = () => {
         <Text style={{ fontSize: 18, fontWeight: "bold" }}>Swift Chat</Text>
       ),
       headerRight: () => (
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 14 }}>
           <Ionicons
             onPress={() => navigation.navigate("Chats")}
             name="chatbox-ellipses-outline"
@@ -148,6 +146,12 @@ export const Home = () => {
             size={24}
             color="black"
           />
+          <Ionicons
+            onPress={() => navigation.navigate("Settings")}
+            name="ios-settings-outline"
+            size={24}
+            color="black"
+          />
         </View>
       ),
     });
@@ -162,4 +166,4 @@ export const Home = () => {
     </ScrollView>
   );
 };
-const styles = StyleSheet.create({});
+const style = StyleSheet.create({});

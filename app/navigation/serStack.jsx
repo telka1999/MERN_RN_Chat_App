@@ -5,6 +5,7 @@ import { Friends } from "../screens/Friends";
 import { Chats } from "../screens/Chats";
 import { ChatMessages } from "../screens/ChatMessages";
 import { Search } from "../screens/Search";
+import { Settings } from "../screens/Settings";
 const Stack = createNativeStackNavigator();
 export const UserStack = () => {
   return (
@@ -15,6 +16,7 @@ export const UserStack = () => {
         <Stack.Screen name="Chats" component={Chats} />
         <Stack.Screen name="Messages" component={ChatMessages} />
         <Stack.Screen name="Search" component={Search} />
+        <Stack.Screen name="Settings" component={Settings} />
       </Stack.Navigator>
     </NavigationContainer>
   );
