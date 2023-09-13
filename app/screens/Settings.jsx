@@ -6,29 +6,67 @@ import {
   KeyboardAvoidingView,
   Pressable,
   Image,
+  ScrollView,
   Alert,
 } from "react-native";
 import { firebaseAuth } from "../config/firebase";
+import { useEffect, useState } from "react";
+import { useAuth } from "../utils/hooks/useAuth";
+import { useHeaderHeight } from "@react-navigation/elements";
 export const Settings = () => {
+  const { user } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const height = useHeaderHeight();
+  const [userData, setUserData] = useState(null);
+  const fetchUser = async () => {
+    if (user) {
+      try {
+        const res = await fetch(`http://10.0.2.2:5000/api/users/${user.uid}`, {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + user.accessToken,
+          },
+          redirect: "follow",
+        });
+        const data = await res.json();
+        setUserData(data);
+        setName(data.name);
+        setEmail(user.email);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+  useEffect(() => {
+    fetchUser();
+  }, [user]);
   return (
-    <View
+    <KeyboardAvoidingView
+      keyboardVerticalOffset={height}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
       style={{
         flex: 1,
         backgroundColor: "white",
-        padding: 10,
         alignItems: "center",
       }}
     >
-      <KeyboardAvoidingView>
+      <ScrollView>
         <View
           style={{
             marginTop: 100,
             justifyContent: "center",
             alignItems: "center",
+            padding: 10,
           }}
         >
           <Image
-            source={require("../assets/favicon.png")}
+            source={
+              userData?.image
+                ? { uri: userData?.image }
+                : require("../assets/blank-profile-picture-973460_1280.png")
+            }
             style={{
               width: 100,
               height: 100,
@@ -42,6 +80,8 @@ export const Settings = () => {
               Name
             </Text>
             <TextInput
+              value={name}
+              onChangeText={(text) => setName(text)}
               autoCapitalize="none"
               style={{
                 fontSize: 18,
@@ -57,6 +97,8 @@ export const Settings = () => {
               Email
             </Text>
             <TextInput
+              value={email}
+              onChangeText={(text) => setEmail(text)}
               autoCapitalize="none"
               style={{
                 fontSize: 18,
@@ -72,6 +114,8 @@ export const Settings = () => {
               Password
             </Text>
             <TextInput
+              value={password}
+              onChangeText={(text) => setPassword(text)}
               secureTextEntry={true}
               autoCapitalize="none"
               style={{
@@ -132,8 +176,8 @@ export const Settings = () => {
             </Pressable>
           </View>
         </View>
-      </KeyboardAvoidingView>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 const styles = StyleSheet.create({});

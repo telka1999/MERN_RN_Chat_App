@@ -19,6 +19,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 export const Register = () => {
   const height = useHeaderHeight();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -48,6 +49,7 @@ export const Register = () => {
             body: JSON.stringify({
               firebaseUserId: userId,
               image: downloadUrl,
+              name: name,
             }),
             redirect: "follow",
           });
@@ -136,6 +138,7 @@ export const Register = () => {
               </Text>
               <TextInput
                 autoCapitalize="none"
+                onChangeText={(text) => setName(text)}
                 style={{
                   fontSize: 18,
                   borderBottomColor: "gray",

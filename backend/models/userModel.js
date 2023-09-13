@@ -9,6 +9,9 @@ const userSchema = mongoose.Schema(
     image: {
       type: String,
     },
+    name: {
+      type: String,
+    },
     freindRequests: [
       {
         type: mongoose.Schema.Types.ObjectId,

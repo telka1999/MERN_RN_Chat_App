@@ -105,7 +105,7 @@ export const Home = () => {
   const [data, setData] = useState(null);
   const fetchData = async () => {
     try {
-      const res = await fetch("http://10.0.2.2:5000/api/users/register", {
+      const res = await fetch("http://10.0.2.2:5000/api/users/login", {
         method: "POST",
         headers: {
           Authorization: "Bearer " + user.accessToken,

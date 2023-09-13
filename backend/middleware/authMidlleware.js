@@ -2,7 +2,6 @@ import admin from "../config/firebase.js";
 
 const protect = async (req, res, next) => {
   let token;
-
   token = req.headers.authorization.split(" ")[1];
 
   if (token) {
