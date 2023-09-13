@@ -1,3 +1,5 @@
+import User from "../models/userModel.js";
+
 // Auth user | POST | Public
 
 const authUser = async (req, res) => {
@@ -7,8 +9,16 @@ const authUser = async (req, res) => {
 // Register user | POST | Public
 
 const registerUser = async (req, res) => {
-  console.log(req.user);
-  res.status(200).json({ message: "Register User" });
+  const { firebaseUserId, image } = req.body;
+  const user = await User.create({
+    firebaseUserId,
+    image,
+  });
+  if (user) {
+    res.status(200).json(user);
+  } else {
+    res.status(400).json({ message: "Invalid user data" });
+  }
 };
 
 export { authUser, registerUser };
