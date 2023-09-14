@@ -9,10 +9,18 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import { firebaseAuth } from "../config/firebase";
+import { firebaseAuth, firebaseStorage } from "../config/firebase";
 import { useEffect, useState } from "react";
 import { useAuth } from "../utils/hooks/useAuth";
 import { useHeaderHeight } from "@react-navigation/elements";
+import {
+  uploadBytesResumable,
+  getDownloadURL,
+  ref,
+  deleteObject,
+} from "firebase/storage";
+import { updateEmail, updatePassword } from "firebase/auth";
+import * as ImagePicker from "expo-image-picker";
 export const Settings = () => {
   const { user } = useAuth();
   const [email, setEmail] = useState("");
@@ -20,6 +28,7 @@ export const Settings = () => {
   const [name, setName] = useState("");
   const height = useHeaderHeight();
   const [userData, setUserData] = useState(null);
+
   const fetchUser = async () => {
     if (user) {
       try {
@@ -39,9 +48,95 @@ export const Settings = () => {
       }
     }
   };
+
   useEffect(() => {
     fetchUser();
   }, [user]);
+
+  const deletOldImage = () => {
+    const storegeRef = ref(firebaseStorage, `ProfileImage/${user.uid}`);
+    deleteObject(storegeRef)
+      .then(() => {
+        console.log("File deleted successfully");
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+
+  const updateProfile = async () => {
+    await fetch("http://10.0.2.2:5000/api/users/name", {
+      method: "PUT",
+      headers: {
+        Authorization: "Bearer " + user.accessToken,
+      },
+      body: JSON.stringify({
+        name: name,
+      }),
+      redirect: "follow",
+    });
+    if (email !== user.email) {
+      updateEmail(firebaseAuth.currentUser, email)
+        .then(() => {
+          console.log("Email updated!");
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    }
+    if (password) {
+      updatePassword(firebaseAuth.currentUser, password)
+        .then(() => {
+          console.log("Update successful!");
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    }
+  };
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      deletOldImage();
+      const res = await fetch(result.assets[0].uri);
+      const blob = await res.blob();
+      const storegeRef = ref(firebaseStorage, `ProfileImage/${user.uid}`);
+      const uploadTask = uploadBytesResumable(storegeRef, blob);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = snapshot.bytesTransferred / snapshot.totalBytes;
+          console.log("Upload is" + progress + "% done");
+        },
+        (error) => {
+          console.log(error.message);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadUrl) => {
+            await fetch("http://10.0.2.2:5000/api/users/image", {
+              method: "PUT",
+              headers: {
+                Authorization: "Bearer " + user.accessToken,
+              },
+              body: JSON.stringify({
+                image: downloadUrl,
+              }),
+              redirect: "follow",
+            });
+          });
+        }
+      );
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       keyboardVerticalOffset={height}
@@ -61,18 +156,20 @@ export const Settings = () => {
             padding: 10,
           }}
         >
-          <Image
-            source={
-              userData?.image
-                ? { uri: userData?.image }
-                : require("../assets/blank-profile-picture-973460_1280.png")
-            }
-            style={{
-              width: 100,
-              height: 100,
-              borderRadius: 100,
-            }}
-          />
+          <Pressable onPress={pickImage}>
+            <Image
+              source={
+                userData?.image
+                  ? { uri: userData?.image }
+                  : require("../assets/blank-profile-picture-973460_1280.png")
+              }
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 100,
+              }}
+            />
+          </Pressable>
         </View>
         <View style={{ marginTop: 50 }}>
           <View>
@@ -156,6 +253,7 @@ export const Settings = () => {
               </Text>
             </Pressable>
             <Pressable
+              onPress={updateProfile}
               style={{
                 width: 100,
                 backgroundColor: "#4A55A2",
