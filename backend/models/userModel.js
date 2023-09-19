@@ -12,6 +12,7 @@ const userSchema = mongoose.Schema(
     name: {
       type: String,
     },
+    email: { type: String },
     freindRequests: [
       {
         type: mongoose.Schema.Types.ObjectId,

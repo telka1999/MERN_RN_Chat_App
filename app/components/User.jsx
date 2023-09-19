@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Pressable, Image } from "react-native";
-export const User = ({ item, btnName }) => {
+export const User = ({ user, btnName }) => {
   return (
     <Pressable
       style={{ flexDirection: "row", alignItems: "center", marginVertical: 10 }}
@@ -12,12 +12,14 @@ export const User = ({ item, btnName }) => {
             borderRadius: 25,
             resizeMode: "cover",
           }}
-          source={require("../assets/favicon.png")}
+          source={user?.image
+            ? { uri: user?.image }
+            : require("../assets/blank-profile-picture-973460_1280.png")}
         />
       </View>
       <View style={{ marginLeft: 12, flex: 1 }}>
-        <Text style={{ fontWeight: "bold" }}>{item.name}</Text>
-        <Text style={{ marginTop: 4, color: "gray" }}>{item.email}</Text>
+        <Text style={{ fontWeight: "bold" }}>{user?.name}</Text>
+        <Text style={{ marginTop: 4, color: "gray" }}>{user?.email}</Text>
       </View>
       <Pressable
         style={{

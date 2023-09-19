@@ -30,27 +30,27 @@ export const Settings = () => {
   const [userData, setUserData] = useState(null);
 
   const fetchUser = async () => {
-    if (user) {
-      try {
-        const res = await fetch(`http://10.0.2.2:5000/api/users/${user.uid}`, {
-          method: "GET",
-          headers: {
-            Authorization: "Bearer " + user.accessToken,
-          },
-          redirect: "follow",
-        });
-        const data = await res.json();
-        setUserData(data);
-        setName(data.name);
-        setEmail(user.email);
-      } catch (error) {
-        console.log(error);
-      }
+    try {
+      const res = await fetch(`http://10.0.2.2:5000/api/users/${user.uid}`, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + user.accessToken,
+        },
+        redirect: "follow",
+      });
+      const data = await res.json();
+      setUserData(data);
+      setName(data.name);
+      setEmail(user.email);
+    } catch (error) {
+      console.log(error);
     }
   };
 
   useEffect(() => {
-    fetchUser();
+    if (user) {
+      fetchUser();
+    }
   }, [user]);
 
   const deletOldImage = () => {
@@ -65,16 +65,19 @@ export const Settings = () => {
   };
 
   const updateProfile = async () => {
-    await fetch("http://10.0.2.2:5000/api/users/name", {
+    const res = await fetch("http://10.0.2.2:5000/api/users/name", {
       method: "PUT",
       headers: {
         Authorization: "Bearer " + user.accessToken,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         name: name,
+        email: email,
       }),
       redirect: "follow",
     });
+    const data = await res.json();
     if (email !== user.email) {
       updateEmail(firebaseAuth.currentUser, email)
         .then(() => {
@@ -93,6 +96,7 @@ export const Settings = () => {
           console.log(error.message);
         });
     }
+    fetchUser();
   };
 
   const pickImage = async () => {
@@ -105,7 +109,9 @@ export const Settings = () => {
     });
 
     if (!result.canceled) {
-      deletOldImage();
+      if (userData.image) {
+        deletOldImage();
+      }
       const res = await fetch(result.assets[0].uri);
       const blob = await res.blob();
       const storegeRef = ref(firebaseStorage, `ProfileImage/${user.uid}`);
@@ -114,17 +120,20 @@ export const Settings = () => {
         "state_changed",
         (snapshot) => {
           const progress = snapshot.bytesTransferred / snapshot.totalBytes;
-          console.log("Upload is" + progress + "% done");
+          console.log("Upload is " + progress + " % done");
         },
         (error) => {
           console.log(error.message);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadUrl) => {
+            console.log(downloadUrl);
+            fetchUser();
             await fetch("http://10.0.2.2:5000/api/users/image", {
               method: "PUT",
               headers: {
                 Authorization: "Bearer " + user.accessToken,
+                "Content-Type": "application/json",
               },
               body: JSON.stringify({
                 image: downloadUrl,

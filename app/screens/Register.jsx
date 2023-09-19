@@ -50,6 +50,7 @@ export const Register = () => {
               firebaseUserId: userId,
               image: downloadUrl,
               name: name,
+              email: email,
             }),
             redirect: "follow",
           });
